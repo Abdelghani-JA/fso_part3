@@ -13,12 +13,13 @@
     "url": "git+https://github.com/Abdelghani-JA/fso_part3.git"
   },
   "author": "Abdelghani JALDA",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Abdelghani-JA/fso_part3/issues"
   },
   "homepage": "https://github.com/Abdelghani-JA/fso_part3#readme",
   "devDependencies": {
+    "morgan": "^1.10.0",
     "nodemon": "^3.0.1"
   },
   "dependencies": {
