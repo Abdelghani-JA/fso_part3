@@ -1,9 +1,11 @@
 {
-  "name": "part3",
+  "name": "phonebook-backend",
   "version": "1.0.0",
   "description": "dedicated repo for part3 of fso",
   "main": "index.js",
   "scripts": {
+    "build:ui": "git rm -rf dist && cd ../frontend && npm run build && cp -r dist ../backend",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
