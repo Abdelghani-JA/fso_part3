@@ -56,9 +56,14 @@ app.get('/api/persons/:id', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (req, res) => {
+  //we have to find by id and reject if not found
   const id = Number(req.params.id)
-  persons = persons.filter(person => person.id !== id)
-  res.status(204).end()
+  if (persons.find(p => p.id === id)) {
+    persons = persons.filter(person => person.id !== id)
+    res.status(204).end()
+  } else {
+    res.status(404).end()
+  }
 })
 
 app.post('/api/persons', (req, res) => {
