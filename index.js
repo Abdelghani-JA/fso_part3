@@ -56,7 +56,6 @@ app.get('/api/persons/:id', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-  //we have to find by id and reject if not found
   const id = Number(req.params.id)
   if (persons.find(p => p.id === id)) {
     persons = persons.filter(person => person.id !== id)
@@ -82,12 +81,23 @@ app.post('/api/persons', (req, res) => {
       return res.status(400).json({error: 'name must be unique'})
     }
   }
-  return res.status(400).json({ 
+  return res.status(400).json({
     error: 'content missing' 
   })
 })
 
-const PORT =  process.env.PORT || 3001
+app.put('/api/persons/:id',(req, res) =>{
+  for (value of Object.values(req.body)){
+    if (!value) {
+      return res.status(400).json({error: 'content missing'})
+    }
+  }
+  const updatedPerson = {id :req.params.id, ...req.body}
+  persons = persons.map(person => person.id === updatedPerson.id ? updatedPerson : person)
+  res.json(updatedPerson)
+})
+
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
