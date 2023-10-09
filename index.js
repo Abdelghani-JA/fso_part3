@@ -1,3 +1,5 @@
+require('dotenv').config()
+const Person = require('./models/person')
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
@@ -9,7 +11,7 @@ app.use(express.json())
 morgan.token('person', req => req.method === 'POST' ? JSON.stringify(req.body) :'')
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person'))
 
-let persons = [
+/* let persons = [
   { 
     "id": 1,
     "name": "Arto Hellas", 
@@ -35,24 +37,29 @@ let persons = [
     "number": "36-23-6423121",
     "id": 5
   }
-]
+] */
 
 app.get('/api/persons',(req, res) =>{
-  res.json(persons)
+  Person.find({}).then(persons =>{
+    res.json(persons)
+  })
 })
 
-app.get('/api/info',(req, res) =>{
-  res.send(`<span>Phonebook has info for ${persons.length} people</span><br><span>${new Date()}</span>`)
+app.get('/api/info',(req, res) => {
+  Person.find({})
+  .then(persons => {
+    res.send(`<span>Phonebook has info for ${persons.length} people</span><br><span>${new Date()}</span>`)
+  })
 })
 
 app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find(person => person.id === id)
-  if (person) {
+  Person.findById(req.params.id)
+  .then(person => {
     res.json(person)
-  } else {
+  })
+  .catch(err => {
     res.status(404).end()
-  }
+  })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -67,6 +74,20 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
+  if (body.name && body.number){
+    const newPerson = {
+      name: body.name,
+      number: body.number,
+    }
+    const person = new Person(newPerson)
+    person.save().then(result => res.json(result))
+    } else {
+      //res.status(400).json({error: 'name must be unique'})
+      res.status(400).json({error: 'content missing'})
+    }
+})
+
+/*   const body = req.body
   if (body.name && body.number){
     const person = persons.find(p => p.name.toLowerCase() === body.name.toLowerCase())
     if (!person){
@@ -83,8 +104,8 @@ app.post('/api/persons', (req, res) => {
   }
   return res.status(400).json({
     error: 'content missing' 
-  })
-})
+  }) */
+
 
 app.put('/api/persons/:id',(req, res) =>{
   for (value of Object.values(req.body)){
@@ -97,7 +118,7 @@ app.put('/api/persons/:id',(req, res) =>{
   res.json(updatedPerson)
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
