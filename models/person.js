@@ -13,8 +13,28 @@ mongoose.set('strictQuery',false)
 mongoose.connect(url)
 
 const personSchema = mongoose.Schema({
-  name:String,
-  number:Number
+  name: {
+    type: String,
+    minLength: 3,
+    required: true
+  },
+  number:{
+    type: String,
+    minLength: 8,
+    validate:{
+      validator:function(str){
+        let hyphen = str.indexOf('-')
+        if(hyphen>1 && hyphen<4){
+          let strP1 = str.slice(0,hyphen)
+          let strP2 = str.slice(hyphen+1)
+          return isFinite(strP1) && isFinite(strP2) ? true : false
+        } else {
+          return false
+        }
+      }
+    },
+    required: true
+  }
 })
 
 personSchema.set('toJSON', {
