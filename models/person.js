@@ -23,7 +23,7 @@ const personSchema = mongoose.Schema({
     minLength: 8,
     validate:{
       validator:function(str){
-        let hyphen = str.indexOf('-')
+        const hyphen = str.indexOf('-')
         if(hyphen>1 && hyphen<4){
           let strP1 = str.slice(0,hyphen)
           let strP2 = str.slice(hyphen+1)
