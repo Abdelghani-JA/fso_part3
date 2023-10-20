@@ -10,7 +10,6 @@ mongoose.connect(url)
     console.log('error connecting to MongoDB:', error.message)
   })
 mongoose.set('strictQuery',false)
-mongoose.connect(url)
 
 const personSchema = mongoose.Schema({
   name: {
@@ -24,9 +23,9 @@ const personSchema = mongoose.Schema({
     validate:{
       validator:function(str){
         const hyphen = str.indexOf('-')
-        if(hyphen>1 && hyphen<4){
-          let strP1 = str.slice(0,hyphen)
-          let strP2 = str.slice(hyphen+1)
+        if(hyphen > 1 && hyphen < 4){
+          const strP1 = str.slice(0,hyphen)
+          const strP2 = str.slice(hyphen+1)
           return isFinite(strP1) && isFinite(strP2) ? true : false
         } else {
           return false
